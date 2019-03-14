@@ -31,6 +31,7 @@ module.exports = function(app) {
                     console.log(err);
                 });
             });
+        res.send("Scrape Complete");
         });
     });
     app.get("/api/clear", function(req, res) {

@@ -1,6 +1,6 @@
 <div class="container">
     <div class="jumbotron">
-        <h1 id="bigWords">Eat-Da-Burger!</h1>
+        <h1 id="bigWords">Let's Scrape Yo!</h1>
     </div>
 </div>
 
@@ -9,15 +9,15 @@
     <div class="row">
         <div class="col">
             {{#each data}}
-                    <div>
-                        <ul>
-                            <li>
-                                <a href="{{this.link}}">
-                                    <button type="submit" class="btn btn-danger">{{this.title}}</button>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div>
+                    <ul>
+                        <li>
+                            <a href="{{this.link}}">
+                                <button type="submit" class="btn btn-danger">{{this.title}}</button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             {{/each}}
         </div>
     </div>
