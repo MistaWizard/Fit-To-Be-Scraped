@@ -12,9 +12,11 @@ const ArticleSchema = new Schema({
     type: String,
     required: true
   },
-  summary: {
+  photo: {
     type: String,
-    required: true
+  },
+  author: {
+    type: String
   },
   note: {
     type: Schema.Types.ObjectId,

@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="jumbotron">
+        <h1 id="bigWords">Eat-Da-Burger!</h1>
+    </div>
+</div>
+
+
+<div class="container border-left border-right">
+    <div class="row">
+        <div class="col">
+            {{#each data}}
+                    <div>
+                        <ul>
+                            <li>
+                                <a href="{{this.link}}">
+                                    <button type="submit" class="btn btn-danger">{{this.title}}</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
