@@ -31,22 +31,55 @@ module.exports = function(app) {
                     console.log(err);
                 });
             });
-        res.send("Scrape Complete");
+        res.redirect("/");
         });
     });
+
+    app.get("/api/notes", function(req, res) {
+        db.Note.find({})
+        .then(function(dbNote) {
+            res.json(dbNote);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+    });
+
+    app.get("/api/articles/:id", function(req, res) {
+        db.Article.findOne({ _id: req.params.id })
+        .populate("note")
+        .then(function(dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+    });
+
+    app.post("/api/notes/:id", function(req, res) {
+        db.Note.create(req.body)
+        .then(function(dbNote) {
+            db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { notes: dbNote._id } }, { new: true });
+        })
+        .then(function(dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+    });
+
     app.get("/api/clear", function(req, res) {
         db.Article.remove()
         .then(function() {
             res.json("documents removed from headline collection")
-        })
+        });
     });
 
     app.delete("/api/delete/notes/:id", function(req, res) {
-        db.Note.remove(
-            {_id: req.params.id}
-        )
+        db.Note.remove({ _id: req.params.id })
         .then(function(result) {
             res.json(result)
-        })
+        });
     });
 }
