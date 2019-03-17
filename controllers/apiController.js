@@ -81,30 +81,33 @@ module.exports = function(app) {
 
     app.post("/api/notes/:id", (req, res) => {
         Note.create(req.body)
-        .then(function(dbNote) {
-            return Article.findOneAndUpdate({ _id: req.params.id }, { $push: { "notes": dbNote._id } }, {new: true});
-        })
-        .then(function(dbArticle) {
-            res.redirect("/saved");
-        })
-        .catch(function(err) {
+        .then(dbNote => 
+            Article.findOneAndUpdate({ _id: req.params.id }, { $push: { notes: dbNote._id } }, {new: true})
+        )
+        .then(dbArticle =>
+            res.redirect("/saved")
+        )
+        .catch((err) => {
             res.json(err);
         });
     });
 
     app.get("/api/clear", (req, res) => {
         Article.remove()
-        .then(function() {
+        .then(() => {
             res.json("documents removed from headline collection");
         });
     });
 
     app.post("/api/notes/delete/:id", (req, res) => {
-        Note.deleteOne({ _id: req.params.id })
-        .then(function(dbArticle) {
+        Note.remove({ _id: req.params.id })
+        // .then(dbNote => 
+        //     Article.findOneAndUpdate({ _id: req.params.id }, { $pull: { notes: dbNote._id } }, {new: true})
+        // )
+        .then((dbArticle) => {
             res.redirect("/saved");
         })
-        .then(function(result) {
+        .then((result) => {
             res.json(result);
         });
     });
