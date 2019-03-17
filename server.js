@@ -2,6 +2,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+const methodOverride = require("method-override");
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static("public"));
+
+app.use(methodOverride("_method"));
 
 app.engine("handlebars", exphbs({defaultLayout: "main"}));
 app.set("view engine", "handlebars");

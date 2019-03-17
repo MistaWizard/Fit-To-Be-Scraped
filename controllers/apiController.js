@@ -1,10 +1,12 @@
-const db = require("../models");
+// const db = require("../models");
 const request = require("request");
 const cheerio = require("cheerio");
+const Article = require("../models/Article");
+const Note = require("../models/Note");
 
 module.exports = function(app) {
     app.get("/api/articles", function(req, res) {
-        db.Article.find({})
+        Article.find({})
         .then(function(dbArticle) {
             res.json(dbArticle);
         })
@@ -23,7 +25,7 @@ module.exports = function(app) {
                 result.link = $(this).find("h3").find("a").attr("href");
                 result.photo = $(this).find("a").find("img").attr("src");
       
-                db.Article.create(result)
+                Article.create(result)
                 .then(function(dbArticle) {
                     console.log(dbArticle);
                 })
@@ -36,7 +38,7 @@ module.exports = function(app) {
     });
 
     app.get("/api/notes", function(req, res) {
-        db.Note.find({})
+        Note.find({})
         .then(function(dbNote) {
             res.json(dbNote);
         })
@@ -46,7 +48,7 @@ module.exports = function(app) {
     });
 
     app.get("/api/articles/:id", function(req, res) {
-        db.Article.findOne({ _id: req.params.id })
+        Article.findOne({ _id: req.params.id })
         .populate("note")
         .then(function(dbArticle) {
             res.json(dbArticle);
@@ -56,13 +58,34 @@ module.exports = function(app) {
         });
     });
 
+    app.post("/api/articles/save/:id", function(req, res) {
+        Article.findOneAndUpdate({ "_id": req.params.id}, {"saved": true})
+        .then(function(dbArticle) {
+            res.send(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+        res.redirect("/");
+    });
+
+    app.post("/api/articles/delete/:id", function(req, res) {
+        Article.findOneAndUpdate({ _id: req.params.id}, {saved: false})
+        .then(function(dbArticle) {
+            res.redirect("/saved");
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+    });
+
     app.post("/api/notes/:id", function(req, res) {
-        db.Note.create(req.body)
+        Note.create(req.body)
         .then(function(dbNote) {
-            db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { notes: dbNote._id } }, { new: true });
+            return Article.findOneAndUpdate({ _id: req.params.id }, { $push: { notes: dbNote._id } }, { new: true });
         })
         .then(function(dbArticle) {
-            res.json(dbArticle);
+            res.redirect("/saved");
         })
         .catch(function(err) {
             res.json(err);
@@ -70,16 +93,20 @@ module.exports = function(app) {
     });
 
     app.get("/api/clear", function(req, res) {
-        db.Article.remove()
+        Article.remove()
         .then(function() {
-            res.json("documents removed from headline collection")
+            res.json("documents removed from headline collection");
         });
     });
 
-    app.delete("/api/delete/notes/:id", function(req, res) {
-        db.Note.remove({ _id: req.params.id })
+    app.post("/api/notes/delete/:id", function(req, res) {
+        Note.remove({ _id: req.params.id })
+        .then(function(dbNote) {
+            // return Article.findOneAndUpdate({ _id: req.params.id }, { $pull: { notes: dbNote._id } }, { new: true });
+            res.redirect("/saved");
+        })
         .then(function(result) {
-            res.json(result)
+            res.json(result);
         });
     });
 }
