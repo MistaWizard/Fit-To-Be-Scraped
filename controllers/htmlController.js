@@ -1,6 +1,6 @@
 const db = require("../models");
 
-module.exports = function(app) {
+module.exports = (app) => {
     app.get("/", (req, res) => {
         db.Article.find({"saved": false}).limit(20)
         .then((dbArticle) => {
@@ -14,10 +14,10 @@ module.exports = function(app) {
 
     app.get("/saved", (req, res) => {
         db.Article.find({"saved": true}).populate("notes", 'body')
-        .then(function(dbArticle) {
+        .then((dbArticle) => {
             res.render("saved", {article: dbArticle});
         })
-        .catch(function(err) {
+        .catch((err) => {
             res.json(err);
         });
     });
