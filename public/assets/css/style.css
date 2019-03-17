@@ -1,11 +1,43 @@
+body {
+    /* font-family: 'Kalam', cursive; */
+    font-family: 'Sniglet', cursive;
+    /* background-image: url("/assets/images/iconiccovers.jpg");
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    opacity: 0.9    ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    top: 0; */
+}
+
+/* .jumbotron {
+    background-image: url("/assets/images/iconiccovers.jpg");
+    background-size: cover;
+    opacity: 0.6;
+} */
+
 #bigWords {
     text-align: center;
 }
 
-#addABurger {
-    margin-top: 25px;
+.articleImage {
+    width: 200px;
+    height: auto;
+    max-width: 85%;
 }
 
-#addMe {
-    margin-top: 15px;
+.articleRow {
+    margin-bottom: 15px;
+}
+
+.takeItHome {
+    max-width: 65%;
+}
+
+.navbar-nav li {
+    margin: 5px;
 }
