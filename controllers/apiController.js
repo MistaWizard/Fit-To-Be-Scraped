@@ -1,6 +1,8 @@
 const db = require("../models");
 const request = require("request");
 const cheerio = require("cheerio");
+const Article = require("../models/Article");
+const Note = require("../models/Note");
 
 module.exports = (app) => {
     app.get("/api/articles", (req, res) => {
@@ -93,12 +95,12 @@ module.exports = (app) => {
     app.get("/api/clear", (req, res) => {
         db.Article.remove()
         .then(() => {
-            res.json("documents removed from headline collection");
+            res.json("documents removed from collection");
         });
     });
 
     app.post("/api/notes/delete/:id", (req, res) => {
-        db.Note.remove({ _id: req.params.id })
+        db.Note.deleteOne({ _id: req.params.id })
         .then((dbNote) =>
             db.Article.findOneAndUpdate({ notes: req.params.id }, { $pull: { notes: req.params.id } }, {new: true})
         )
